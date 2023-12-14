@@ -3,6 +3,13 @@ from dotenv import load_dotenv
 import os
 from datetime import datetime
 
+SAFETY_SETTINGS = {
+    "HARM_CATEGORY_DANGEROUS_CONTENT": "BLOCK_NONE",
+    "HARM_CATEGORY_SEXUALLY_EXPLICIT": "BLOCK_NONE",
+    "HARM_CATEGORY_HATE_SPEECH": "BLOCK_NONE",
+    "HARM_CATEGORY_HARASSMENT": "BLOCK_NONE",
+}
+
 
 def main():
     load_dotenv()
@@ -40,7 +47,8 @@ def main():
                     return
 
                 if user_input:
-                    response = chat.send_message(user_input, stream=True)
+                    response = chat.send_message(
+                        user_input, stream=True, safety_settings=SAFETY_SETTINGS)
                     response_text = ""
                     for chunk in response:
                         response_text += chunk.text

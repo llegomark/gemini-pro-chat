@@ -20,7 +20,7 @@ This Python application utilizes the Gemini Pro API from `google.generativeai` t
 
 2. Install required Python packages:
    ```bash
-   pip install google-generativeai python-dotenv
+   pip install -r requirements.txt
    ```
 
 3. Create a `.env` file in the project directory and add your Gemini Pro API key:
