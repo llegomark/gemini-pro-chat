@@ -76,6 +76,7 @@ def main():
 
         if user_input.lower() == "restart":
             history_manager.save_to_file()
+            os.system('cls' if os.name == 'nt' else 'clear')
             history_manager.add_message("system", "--- New Session ---")
             chat = model.start_chat(history=[])
             continue
