@@ -30,6 +30,10 @@ class ChatHistoryManager:
                 f"{message['timestamp']} {message['role']}: {message['text']}")
 
     def _rotate_file_if_needed(self):
+        if not os.path.exists(self.filename):
+            with open(self.filename, "a", encoding="utf-8") as file:
+                pass
+
         if os.path.getsize(self.filename) > self.max_file_size_mb * 1024 * 1024:
             os.rename(self.filename, self.filename + ".backup")
 
