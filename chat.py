@@ -3,13 +3,6 @@ from dotenv import load_dotenv
 import os
 from datetime import datetime
 
-SAFETY_SETTINGS = {
-    "HARM_CATEGORY_DANGEROUS_CONTENT": "BLOCK_NONE",
-    "HARM_CATEGORY_SEXUALLY_EXPLICIT": "BLOCK_NONE",
-    "HARM_CATEGORY_HATE_SPEECH": "BLOCK_NONE",
-    "HARM_CATEGORY_HARASSMENT": "BLOCK_NONE",
-}
-
 
 def main():
     load_dotenv()
@@ -17,12 +10,28 @@ def main():
 
     genai.configure(api_key=api_key)
 
+    generation_config = {
+        "temperature": 0.9,
+        "top_p": 1,
+        "top_k": 1,
+        "max_output_tokens": 4096,
+    }
+
+    safety_settings = {
+        "HARM_CATEGORY_HARASSMENT": "BLOCK_NONE",
+        "HARM_CATEGORY_HATE_SPEECH": "BLOCK_NONE",
+        "HARM_CATEGORY_SEXUALLY_EXPLICIT": "BLOCK_NONE",
+        "HARM_CATEGORY_DANGEROUS_CONTENT": "BLOCK_NONE",
+    }
+
     global_history = []
     last_saved_index = 0
 
     while True:
         try:
-            model = genai.GenerativeModel('gemini-pro')
+            model = genai.GenerativeModel('gemini-pro',
+                                          generation_config=generation_config,
+                                          safety_settings=safety_settings)
             chat = model.start_chat(history=[])
 
             last_saved_index = add_to_history_and_save(
@@ -47,8 +56,7 @@ def main():
                     return
 
                 if user_input:
-                    response = chat.send_message(
-                        user_input, stream=True, safety_settings=SAFETY_SETTINGS)
+                    response = chat.send_message(user_input, stream=True)
                     response_text = ""
                     for chunk in response:
                         response_text += chunk.text

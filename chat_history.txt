@@ -20,3 +20,47 @@ The 2022 Philippine presidential election was a closely contested race, and Robr
 2023-12-14 10:08:02 Gemini: 
 2023-12-14 10:08:24 User: who are you?
 2023-12-14 10:08:24 Gemini: I am a large language model, trained by Google.
+2023-12-14 16:13:05 Gemini: --- New Session ---
+2023-12-14 16:13:05 User: Session started
+2023-12-14 16:13:05 Gemini: 
+2023-12-14 16:13:21 User: are the chemical formulas in breaking bad real?
+2023-12-14 16:13:21 Gemini: The chemical formulas used in Breaking Bad are generally accurate and reflect real-world chemistry. The show's writers and producers worked closely with chemistry experts to ensure that the science depicted in the show was accurate.
+
+However, there are a few instances where the show takes some liberties with chemistry for dramatic effect. For example, in the episode "Ozymandias," Walter White uses a highly unstable chemical compound called fulminated mercury to create a powerful explosive. In reality, fulminated mercury is so unstable that it is extremely difficult to handle and is not used in any practical applications.
+
+Overall, the chemical formulas used in Breaking Bad are mostly accurate and reflect real-world chemistry. The few instances where the show takes liberties with chemistry are done for dramatic effect and do not detract from the overall realism of the show.
+
+Here are some examples of accurate chemical formulas used in Breaking Bad:
+
+* Methamphetamine: C10H15N
+* Methylamine: CH3NH2
+* Hydrochloric acid: HCl
+* Sodium hydroxide: NaOH
+* Phenylacetic acid: C8H8O2
+* Ephedrine: C10H15NO
+* Pseudoephedrine: C10H15NO
+
+Here are some examples of inaccurate chemical formulas used in Breaking Bad:
+
+* Fulminated mercury: Hg(ONC)2 (In reality, fulminated mercury is a mixture of several different compounds, including Hg(CNO)2, HgO, and Hg.)
+* Brock's poison: Ricin (Ricin is a protein, not a chemical compound.)
+2023-12-14 16:13:56 User: can you show the complete chemical formulas used for meth
+2023-12-14 16:13:56 Gemini: The complete chemical formula for methamphetamine is **C10H15N**. This molecular formula indicates that each molecule of methamphetamine contains 10 carbon atoms, 15 hydrogen atoms, and 1 nitrogen atom.
+
+Methamphetamine can also be represented by the following structural formula:
+
+```
+CH3CH2CH(CH3)NHCH3
+```
+
+This structural formula shows how the atoms are arranged in a molecule of methamphetamine. The carbon atoms are represented by black circles, the hydrogen atoms are represented by white circles, and the nitrogen atom is represented by a blue circle.
+
+Methamphetamine is a powerful and addictive stimulant drug. It is produced illegally in clandestine laboratories and is often sold on the street as crystal meth, ice, or speed.
+
+Methamphetamine is synthesized from a variety of chemicals, including pseudoephedrine, ephedrine, and phenyl-2-propanone. The exact synthesis process varies depending on the method used, but the general steps are as follows:
+
+1. Reduction of the precursor chemical to form methylamine.
+2. Reaction of methylamine with phenylacetone to form methamphetamine.
+3. Purification of the methamphetamine product.
+
+The synthesis of methamphetamine is a dangerous process that can produce toxic fumes and explosive chemicals. It is important to note that the production of methamphetamine is illegal in most countries and should only be carried out by trained professionals in a laboratory setting.
