@@ -2,11 +2,44 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 import os
 from datetime import datetime
+import re
+
+
+class ChatHistoryManager:
+    def __init__(self, filename="chat_history.txt", max_file_size_mb=5):
+        self.history = []
+        self.filename = filename
+        self.max_file_size_mb = max_file_size_mb
+
+    def add_message(self, role, text):
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.history.append(
+            {'role': role, 'text': text, 'timestamp': timestamp})
+
+    def save_to_file(self):
+        self._rotate_file_if_needed()
+        with open(self.filename, "a", encoding="utf-8") as file:
+            for message in self.history:
+                file.write(
+                    f"{message['timestamp']} {message['role']}: {message['text']}\n")
+        self.history.clear()
+
+    def display(self):
+        for message in self.history:
+            print(
+                f"{message['timestamp']} {message['role']}: {message['text']}")
+
+    def _rotate_file_if_needed(self):
+        if os.path.getsize(self.filename) > self.max_file_size_mb * 1024 * 1024:
+            os.rename(self.filename, self.filename + ".backup")
 
 
 def main():
     load_dotenv()
     api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        raise ValueError(
+            "API key not found. Please set your GEMINI_API_KEY in the environment.")
 
     genai.configure(api_key=api_key)
 
@@ -24,79 +57,47 @@ def main():
         "HARM_CATEGORY_DANGEROUS_CONTENT": "BLOCK_NONE",
     }
 
-    global_history = []
-    last_saved_index = 0
+    history_manager = ChatHistoryManager()
+    history_manager.add_message("system", "--- New Session ---")
+
+    model = genai.GenerativeModel(
+        'gemini-pro', generation_config=generation_config, safety_settings=safety_settings)
+    chat = model.start_chat(history=[])
 
     while True:
-        try:
-            model = genai.GenerativeModel('gemini-pro',
-                                          generation_config=generation_config,
-                                          safety_settings=safety_settings)
+        user_input = input("User: ").strip()
+        if not user_input:
+            print("Please enter some text.")
+            continue
+
+        if user_input.lower() == "history":
+            history_manager.display()
+            continue
+
+        if user_input.lower() == "restart":
+            history_manager.save_to_file()
+            history_manager.add_message("system", "--- New Session ---")
             chat = model.start_chat(history=[])
+            continue
 
-            last_saved_index = add_to_history_and_save(
-                global_history, "Session started", "", last_saved_index, new_session=True)
+        if user_input.lower() == "exit":
+            history_manager.save_to_file()
+            break
 
-            while True:
-                user_input = input("User: ").strip().lower()
-
-                if user_input == "history":
-                    display_chat_history(global_history)
-                    continue
-
-                if user_input == "restart":
-                    save_chat_to_file(
-                        global_history[last_saved_index:], "chat_history.txt")
-                    last_saved_index = len(global_history)
-                    break
-
-                if user_input == "exit":
-                    save_chat_to_file(
-                        global_history[last_saved_index:], "chat_history.txt")
-                    return
-
-                if user_input:
-                    response = chat.send_message(user_input, stream=True)
-                    response_text = ""
-                    for chunk in response:
-                        response_text += chunk.text
-                        print(chunk.text)
-
-                    last_saved_index = add_to_history_and_save(
-                        global_history, user_input, response_text, last_saved_index)
+        try:
+            response = chat.send_message(user_input, stream=True)
+            response_text = ""
+            for chunk in response:
+                if chunk.text.endswith("."):
+                    response_text += chunk.text
                 else:
-                    print("Please enter some text.")
+                    response_text += re.sub(r'\s*$', '.', chunk.text)
+                print(chunk.text)
 
+            history_manager.add_message("user", user_input)
+            history_manager.add_message("gemini", response_text)
         except Exception as e:
             print(f"An error occurred: {e}")
-
-
-def add_to_history_and_save(history, user_input, response_text, last_saved_index, new_session=False):
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    if new_session:
-        history.append(
-            {'role': 'system', 'text': "--- New Session ---", 'timestamp': timestamp})
-    history.extend([
-        {'role': 'user', 'text': user_input, 'timestamp': timestamp},
-        {'role': 'gemini', 'text': response_text, 'timestamp': timestamp}
-    ])
-    save_chat_to_file(history[last_saved_index:], "chat_history.txt")
-    return len(history)
-
-
-def display_chat_history(history):
-    print("\nComplete Chat History:")
-    for message in history:
-        sender = "User" if message['role'] == 'user' else "Gemini"
-        print(f"{message['timestamp']} {sender}: {message['text']}")
-    print("\n")
-
-
-def save_chat_to_file(history, filename):
-    with open(filename, "a", encoding="utf-8") as file:
-        for message in history:
-            sender = "User" if message['role'] == 'user' else "Gemini"
-            file.write(f"{message['timestamp']} {sender}: {message['text']}\n")
 
 
 if __name__ == "__main__":
