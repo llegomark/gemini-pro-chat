@@ -92,12 +92,14 @@ def main():
         try:
             response = chat.send_message(user_input, stream=True)
             response_text = ""
+            print("Gemini:")
             for chunk in response:
                 if chunk.text.endswith("."):
                     response_text += chunk.text
                 else:
                     response_text += re.sub(r'\s*$', '.', chunk.text)
                 print(chunk.text)
+            print()
 
             history_manager.add_message("user", user_input)
             history_manager.add_message("gemini", response_text)
