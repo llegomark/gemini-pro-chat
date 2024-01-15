@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 import os
 from datetime import datetime
 import re
+from rich.console import Console
+from rich.markdown import Markdown
 
 
 class ChatHistoryManager:
@@ -68,10 +70,18 @@ def main():
         'gemini-pro', generation_config=generation_config, safety_settings=safety_settings)
     chat = model.start_chat(history=[])
 
+    help_massage = """Chat commands:
+history: Show chat history (chat_history.txt)
+restart: Start a new conversation
+exit: Exit this chat app
+"""
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print(f"Welcome to Gemini-Pro python chat app.\n{help_massage}")
+
     while True:
-        user_input = input("User: ").strip()
+        user_input = input("User:\n").strip()
         if not user_input:
-            print("Please enter some text.")
+            print(f"Please enter some text.\n{help_massage}")
             continue
 
         if user_input.lower() == "history":
@@ -83,6 +93,7 @@ def main():
             os.system('cls' if os.name == 'nt' else 'clear')
             history_manager.add_message("system", "--- New Session ---")
             chat = model.start_chat(history=[])
+            print(f"Welcome to Gemini-Pro python chat app.\n{help_massage}")
             continue
 
         if user_input.lower() == "exit":
@@ -92,14 +103,17 @@ def main():
         try:
             response = chat.send_message(user_input, stream=True)
             response_text = ""
+
             print("Gemini:")
             for chunk in response:
                 if chunk.text.endswith("."):
                     response_text += chunk.text
                 else:
                     response_text += re.sub(r'\s*$', '.', chunk.text)
-                print(chunk.text)
-            print()
+
+            console = Console()
+            md = Markdown(response_text)
+            console.print(md)
 
             history_manager.add_message("user", user_input)
             history_manager.add_message("gemini", response_text)
